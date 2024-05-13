@@ -1,0 +1,29 @@
+[
+  {
+    "id": "4",
+    "title": "ffggh",
+    "description": "sss",
+    "price": "5",
+    "thumbnail": "https://www.google.com/search?sca_esv=f42f57a008774f06&sca_upv=1&rlz=1C1ONGR_esAR1064AR1064&sxsrf=ADLYWILOxcBnnscF9O8VA3kED2zBSUEMmQ:1715359167764&q=vinilo&uds=ADvngMjFqkA0zTUh3r4rf-7tEyYlVsZba8rQEcfGOm_2Qo2hogiib4bIadGMh3y3kiLAXUPyW4aIJCQKcRIYwsn8Ubr0T-JbYU54WsmAGMROfTpa8-UqBzbE51QBjsfYmu6T2fD8_ydn4--5577imvxLUt9Lsb4IIpbA7tNC-yHbCnheru5KbLViGUb3VWiOj2HD3nDqKUHmpfs6Zh6D0xnKeHrXiz8RDSTgeTKdpy-3fddObFPzljg2YCypGP6MiD_35PqJsSIRrKSkv2nGCr2cPzMdIb6XIg&udm=2&prmd=isvnmbtz&sa=X&ved=2ahUKEwiJ-ezuwoOGAxXSpJUCHYPrBiMQtKgLegQIDhAB&biw=1536&bih=738&dpr=1.25#vhid=PowQapLcjaMwmM&vssid=mosaic",
+    "code": "258",
+    "stock": "8"
+  },
+  {
+    "id": "25",
+    "title": "hjsadkjsa",
+    "description": "mjkcsahnf",
+    "price": "2",
+    "thumbnail": " jkwhqnj",
+    "code": "MMM",
+    "stock": ""
+  },
+  {
+    "id": "5",
+    "title": "ffff",
+    "description": "fff",
+    "price": "3",
+    "thumbnail": "https://img.freepik.com/fotos-premium/plato-blanco-aislado-blanco_355725-122.jpg",
+    "code": "fggg",
+    "stock": "4"
+  }
+]

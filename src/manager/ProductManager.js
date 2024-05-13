@@ -74,7 +74,7 @@ class ProductManager {
     }
 }
 
-const productManager = new ProductManager('./data/products.json');
+const productManager = new ProductManager('/src/public/data/products.json');
 
 (async () => {
     try {
@@ -110,7 +110,9 @@ const productManager = new ProductManager('./data/products.json');
     } catch (error) {
         console.error('Error:', error.message);
     }
-})();
+})
+
+();
 
 
 
