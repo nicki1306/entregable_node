@@ -6,6 +6,12 @@ const pmanager = new ProductManager(__dirname + '/data/products.json')
 
 const router = Router()
 
+router.get("/products", async (req, res) => {
+    const listaproductos = await pmanager.getProducts({})
+    res.render("home", { listaproductos })
+})
+
+
 router.get("/", async (req, res) => {
     const listaproductos = await pmanager.getProducts({})
     res.render("home", { listaproductos })
