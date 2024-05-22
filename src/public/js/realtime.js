@@ -10,7 +10,7 @@ function updateProductList(products) {
     let productos = "";
 
     products.forEach((product) => {
-        productos += `
+        productos = `
     <div class="card bg-secondary mb-3 mx-4 my-4" style="max-width: 20rem;">
                         <div class="card-header">code: ${product.code}</div>
                         <div class="card-body">

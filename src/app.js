@@ -1,5 +1,7 @@
 import express from "express"
 import { __dirname } from "./utils.js"
+import path from "path"
+import { fileURLToPath } from 'url';
 import handlebars from "express-handlebars"
 import config from "./config.js"
 import viewRouter from "./routes/view.router.js"
@@ -11,7 +13,9 @@ const app = express()
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use(express.static(__dirname + "/public"))
+app.use('/static', express.static(path.join(__dirname, 'public')));
+
+//app.use(express.static(__dirname + "/public"))
 
 //handlebars
 app.engine("handlebars", handlebars.engine())
