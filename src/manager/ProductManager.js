@@ -74,7 +74,7 @@ class ProductManager {
     }
 }
 
-const productManager = new ProductManager('/src/public/data/products.json');
+const productManager = new ProductManager('../public/data/products.json');
 
 (async () => {
     try {
