@@ -1,11 +1,17 @@
 import { Router } from "express"
 import ProductManager from "../manager/ProductManager.js"
 import { __dirname } from "../utils.js"
+import config from "../config.js"
+
+import productsModel from "../models/products.model.js"
 
 const manager = new ProductManager(__dirname + '/public/data/products.json')
 const router = Router()
 
+
+
 router.get("/products", async (req, res) => {
+    const Products = await productsModel.find()
     const products = await manager.getProducts(req.query)
     res.json({ products })
 })
@@ -17,6 +23,8 @@ router.get("/products/:pid", async (req, res) => {
 });
 
 router.post("/products", async (req, res) => {
+    const socketServer = req.app.get("socketServer")
+    socketServer.emit("newProduct", req.body);
     const newproduct = await manager.addProduct(req.body);
     res.json({ status: "success", newproduct });
 });

@@ -13,7 +13,7 @@ import cartRouter from "./routes/carts.router.js"
 
 const app = express()
 const expressInstance = app.listen(config.PORT, async () => {
-    await mongoose.connect(config.MONGO_URL)
+    await mongoose.connect(config.MONGODB_URI)
     console.log(`Servidor escuchando en http://localhost:${config.PORT}`);
 })
 
@@ -34,6 +34,5 @@ app.use("/", viewRouter)
 
 
     //MongoDB
-
     const socketServer = initSocket(expressInstance);
     app.set('socketServer', socketServer);

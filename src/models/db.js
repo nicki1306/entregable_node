@@ -1,7 +1,7 @@
 // db.js
 import mongoose from 'mongoose';
 
-mongoose.connect('mongodb+srv://nickiicn:<gatito1306>@ecommerce.sxitpsr.mongodb.net/ecommercedb?retryWrites=true&w=majority', 
+mongoose.connect('mongodb+srv://nicki:<gatito13>@cluster0.sxitpsr.mongodb.net/ecommerce', 
 { useNewUrlParser: true, useUnifiedTopology: true });
 
 const db = mongoose.connection;

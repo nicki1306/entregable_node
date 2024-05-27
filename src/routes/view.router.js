@@ -12,11 +12,6 @@ router.get("/products", async (req, res) => {
 })
 
 
-// router.get("/", async (req, res) => {
-//     const listaproductos = await pmanager.getProducts({})
-//     res.render("home", { listaproductos })
-// })
-
 router.get("/realtimeproducts", async (req, res) => {
     res.render("realTimeProducts")
 })
