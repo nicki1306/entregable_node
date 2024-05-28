@@ -11,6 +11,8 @@ import productRouter from "./routes/Products.router.js"
 import cartRouter from "./routes/carts.router.js"
 
 
+let messages = []
+
 const app = express()
 const expressInstance = app.listen(config.PORT, async () => {
     await mongoose.connect(config.MONGODB_URI)
