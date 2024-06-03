@@ -3,13 +3,16 @@ import mongoose from "mongoose";
 mongoose.pluralize(null);
 
 const collection = "carts";
-const schema = new mongoose.Schema({  
 
-    id: { type: Number, required: true, unique: true },
-    products: { type: Array, required: true },
+const productSchema = new mongoose.Schema({
+    productId: { type: mongoose.Schema.Types.ObjectId, ref: 'products', required: true },
+    quantity: { type: Number, required: true, default: 1 }
+});
 
-})
+const cartSchema = new mongoose.Schema({
+    products: { type: [productSchema], required: true },
+}, { timestamps: true });
 
-const model = mongoose.model(collection, schema)
+const Cart = mongoose.model(collection, cartSchema);
 
-export default model
+export default Cart;

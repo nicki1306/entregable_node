@@ -1,53 +1,60 @@
-import { Router } from "express"
-import CartManager from "../manager/CartManager.js"
-import config from "../config.js"
-import { __dirname } from "../utils.js"
-import cartsModel from "../dao/models/carts.model.js"
-import UsersModel from "../dao/models/users.model.js"
-import productsModel from "../dao/models/products.model.js"
+import { Router } from 'express';
+import Cart from '../models/carts.model.js';
+import Product from '../models/products.models.js';
 
-const manager = new CartManager(__dirname + '/src/public/data/carts.json')
-const router = Router()
+const router = Router();
 
-
-router.get("/", async (req, res) => {
-
-    const carts = await cartsModel.find()
-        .populate({ path: 'products', model: 'Products' })
-        .populate({ path: 'id', model: 'Users' })
-        .lean()
-    res.json({ carts })
-
-})
-
-router.get("/carts", async (req, res) => {
-    const carrito = await manager.getCarts()
-    res.json({ carrito })
-})
-
-router.get("/carts/:cid", async (req, res) => {
-    const carritofound = await manager.getCartbyId(req.params)
-    res.json({ status: "success", carritofound })
-})
-
-
-router.post("/carts/", async (req, res) => {
-    const newcart = await manager.addCart();
-    res.json({ status: "success", newcart });
+// Crear un nuevo carrito
+router.post('/', async (req, res) => {
+    const newCart = new Cart({ products: [] });
+    await newCart.save();
+    res.json({ status: 'success', cart: newCart });
 });
 
-router.post("/carts/:cid/products/:pid", async (req, res) => {
-    try {
-        const cid = parseInt(req.params.cid);
-        const pid = parseInt(req.params.pid);
-
-        await manager.addProductToCart(cid, pid);
-        res.json({ status: "success", message: "Product added to cart successfully." });
-    } catch (error) {
-        console.error("Error adding product to cart:", error);
-        res.status(500).json({ status: "error", message: "Failed to add product to cart." });
+// Obtener un carrito por ID
+router.get('/:id', async (req, res) => {
+    const cart = await Cart.findById(req.params.id).populate('products.productId');
+    if (!cart) {
+        return res.status(404).json({ error: 'Cart not found' });
     }
+    res.json({ status: 'success', cart });
 });
 
+// Agregar un producto al carrito
+router.post('/:id/products', async (req, res) => {
+    const { productId, quantity } = req.body;
+    const cart = await Cart.findById(req.params.id);
+    if (!cart) {
+        return res.status(404).json({ error: 'Cart not found' });
+    }
 
-export default router
+    const product = await Product.findById(productId);
+    if (!product) {
+        return res.status(404).json({ error: 'Product not found' });
+    }
+
+    const existingProductIndex = cart.products.findIndex(p => p.productId.toString() === productId);
+    if (existingProductIndex >= 0) {
+        cart.products[existingProductIndex].quantity += quantity;
+    } else {
+        cart.products.push({ productId, quantity });
+    }
+
+    await cart.save();
+    res.json({ status: 'success', cart });
+});
+
+// Eliminar un producto del carrito
+router.delete('/:id/products/:productId', async (req, res) => {
+    const { id, productId } = req.params;
+    const cart = await Cart.findById(id);
+    if (!cart) {
+        return res.status(404).json({ error: 'Cart not found' });
+    }
+
+    cart.products = cart.products.filter(p => p.productId.toString() !== productId);
+    await cart.save();
+    res.json({ status: 'success', cart });
+});
+
+export default router;
