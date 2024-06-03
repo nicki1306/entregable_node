@@ -1,9 +1,24 @@
 import { Router } from "express"
 import CartManager from "../manager/CartManager.js"
+import config from "../config.js"
 import { __dirname } from "../utils.js"
+import cartsModel from "../dao/models/carts.model.js"
+import UsersModel from "../dao/models/users.model.js"
+import productsModel from "../dao/models/products.model.js"
 
 const manager = new CartManager(__dirname + '/src/public/data/carts.json')
 const router = Router()
+
+
+router.get("/", async (req, res) => {
+
+    const carts = await cartsModel.find()
+        .populate({ path: 'products', model: 'Products' })
+        .populate({ path: 'id', model: 'Users' })
+        .lean()
+    res.json({ carts })
+
+})
 
 router.get("/carts", async (req, res) => {
     const carrito = await manager.getCarts()

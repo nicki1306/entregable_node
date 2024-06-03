@@ -1,6 +1,9 @@
 import { Router } from "express"
 import { __dirname } from "../utils.js"
 import ProductManager from "../manager/ProductManager.js"
+import bcrypt from 'bcryptjs';
+import UsersModel from "../dao/models/users.model.js"
+
 
 const pmanager = new ProductManager(__dirname + './public/data/products.json')
 
@@ -23,22 +26,42 @@ router.get("/carts/:cid", async (req, res) => {
     res.render("carts", { carrito })
 })
 
-router.get("/loguin", async (req, res) => {
-    res.render("login")
-})
+router.get('/login', (req, res) => {
+    res.render('login');
+});
 
-router.get("/register", async (req, res) => {
-    res.render("register")
-})
+router.get('/register', (req, res) => {
+    res.render('register');
+});
 
-router.get("/chat", async (req, res) => {
-    res.render("chat")
-})
+router.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (user && bcrypt.compareSync(password, user.password)) {
+        req.session.user = user;
+        req.session.role = user.email === 'adminCoder@coder.com' ? 'admin' : 'usuario';
+        res.redirect('/products');
+    } else {
+        res.render('login', { error: 'Invalid credentials' });
+    }
+});
 
-router.get("/logout", async (req, res) => { 
-    res.render("logout")
-})
+router.post('/register', async (req, res) => {
+    const { email, password, ...rest } = req.body;
+    const hashedPassword = bcrypt.hashSync(password, 8);
+    const newUser = new User({ email, password: hashedPassword, ...rest });
+    await newUser.save();
+    res.redirect('/login');
+});
 
+router.get('/logout', (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            return res.status(500).send('Error logging out');
+        }
+        res.redirect('/login');
+    });
+});
 
 
 

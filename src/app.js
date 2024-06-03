@@ -1,40 +1,65 @@
-import express from "express"
-import { __dirname } from "./utils.js"
-import path from "path"
+import express from 'express';
+import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import mongoose from "mongoose";
-import handlebars from "express-handlebars"
-import initSocket from "./socket.io.js";
-import config from "./config.js"
-import viewRouter from "./routes/view.router.js"
-import productRouter from "./routes/Products.router.js"
-import cartRouter from "./routes/carts.router.js"
+import cookieParser from 'cookie-parser';
+import session from 'express-session';
+import MongoStore from 'connect-mongo';
+import mongoose from 'mongoose';
+import handlebars from 'express-handlebars';
+import initSocket from './socket.io.js';
+import config from './config.js';
+import viewRouter from './routes/view.router.js';
+import productRouter from './routes/products.router.js';
+import cartRouter from './routes/carts.router.js';
+import userRouter from './routes/user.routes.js';
+import bcrypt from 'bcryptjs';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-let messages = []
-
-const app = express()
+const app = express();
 const expressInstance = app.listen(config.PORT, async () => {
-    await mongoose.connect(config.MONGODB_URI)
+    await mongoose.connect(config.MONGODB_URI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    });
     console.log(`Servidor escuchando en http://localhost:${config.PORT}`);
-})
+});
 
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+// Configuración de cookies y sesiones
+app.use(cookieParser());
+app.use(session({
+    store: MongoStore.create({
+        mongoUrl: config.MONGODB_URI,
+        mongoOptions: {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        },
+        ttl: 60 * 60 * 24 // 1 día
+    }),
+    secret: 'secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24 // 1 día
+    }
+}));
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use('/static', express.static(path.join(__dirname, 'public')));
 
+// Configuración de Handlebars
+app.engine('handlebars', handlebars.engine());
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'handlebars');
 
-//handlebars
-app.engine("handlebars", handlebars.engine())
-app.set("views", __dirname + "/views")
-app.set("view engine", "handlebars")
+// Rutas
+app.use('/api/products', productRouter);
+app.use('/api/carts', cartRouter);
+app.use('/api/users', userRouter);
+app.use('/', viewRouter);
 
-//rutas
-app.use("/api", productRouter)
-app.use("/api", cartRouter)
-app.use("/", viewRouter)
-
-
-    //MongoDB
-    const socketServer = initSocket(expressInstance);
-    app.set('socketServer', socketServer);
+// Socket.io
+const socketServer = initSocket(expressInstance);
+app.set('socketServer', socketServer);
