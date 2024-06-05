@@ -1,16 +1,14 @@
 import { Router } from "express"
-import { __dirname } from "../utils.js"
 import ProductManager from "../manager/ProductManager.js"
 import bcrypt from 'bcryptjs';
 import UsersModel from "../dao/models/users.model.js"
 
 
-const pmanager = new ProductManager(__dirname + './public/data/products.json')
-
+const pmanager = new ProductManager()
 const router = Router()
 
 router.get("/products", async (req, res) => {
-    const listaproductos = await pmanager.getProducts({})
+    const listaproductos = await ProductManager.getProducts({})
     res.render("home", { listaproductos })
 })
 

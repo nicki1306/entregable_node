@@ -12,7 +12,10 @@ import viewRouter from './routes/view.router.js';
 import productRouter from './routes/products.router.js';
 import cartRouter from './routes/carts.router.js';
 import userRouter from './routes/user.routes.js';
-import bcrypt from 'bcryptjs';
+import FileStore from 'session-file-store';
+import cookieRouter from './routes/cookies.router.js';
+import sessionsRouter from './routes/sessions.router.js';
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -27,9 +30,11 @@ const expressInstance = app.listen(config.PORT, async () => {
 });
 
 // Configuración de cookies y sesiones
+const fileStorage = FileStore(session)
 app.use(cookieParser());
 app.use(session({
-    store: MongoStore.create({
+    store: new fileStorage({
+        path: './sessions',
         mongoUrl: config.MONGODB_URI,
         mongoOptions: {
             useNewUrlParser: true,
@@ -47,6 +52,7 @@ app.use(session({
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser(config.SECRET));
 app.use('/static', express.static(path.join(__dirname, 'public')));
 
 // Configuración de Handlebars
@@ -55,10 +61,12 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'handlebars');
 
 // Rutas
+app.use('/', viewRouter);
 app.use('/api/products', productRouter);
 app.use('/api/carts', cartRouter);
 app.use('/api/users', userRouter);
-app.use('/', viewRouter);
+app.use('api/cookies', cookieRouter);
+app.use('/api/sessions', sessionsRouter);
 
 // Socket.io
 const socketServer = initSocket(expressInstance);
