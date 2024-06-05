@@ -4,7 +4,6 @@ import bcrypt from "bcrypt"
 const router = express.Router()
 
 import express from 'express';
-import bcrypt from 'bcrypt';
 
 // Mock database
 const users = [
