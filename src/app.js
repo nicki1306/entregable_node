@@ -6,7 +6,7 @@ import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import mongoose from 'mongoose';
 import handlebars from 'express-handlebars';
-import initSocket from './socket.io.js';
+import initSocket from './public/js/socket.io.js';
 import config from './config.js';
 import viewRouter from './routes/view.router.js';
 import productRouter from './routes/Products.router.js';
@@ -56,6 +56,12 @@ app.use(cookieParser(config.SECRET));
 app.use('/static', express.static(path.join(__dirname, 'public')));
 
 // Configuración de Handlebars
+const hbs = handlebars.create({
+    helpers: {
+        eq: (a, b) => a === b
+    }
+});
+app.engine('handlebars', hbs.engine);
 app.engine('handlebars', handlebars.engine());
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'handlebars');

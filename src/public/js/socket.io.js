@@ -1,5 +1,5 @@
 import { Server } from 'socket.io';
-import ProductManager from './manager/ProductManager.js';
+import ProductManager from '../../manager/ProductManager.js';
 
 const initSocket = (httpServer) => {
     let messages = [];
