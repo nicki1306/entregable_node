@@ -9,7 +9,7 @@ import handlebars from 'express-handlebars';
 import initSocket from './socket.io.js';
 import config from './config.js';
 import viewRouter from './routes/view.router.js';
-import productRouter from './routes/products.router.js';
+import productRouter from './routes/Products.router.js';
 import cartRouter from './routes/carts.router.js';
 import userRouter from './routes/user.routes.js';
 import FileStore from 'session-file-store';

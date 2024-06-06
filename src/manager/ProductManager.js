@@ -1,13 +1,8 @@
-// managers/ProductManager.js
 import mongoose from 'mongoose';
 import Product from '../dao/models/products.model.js';
-
+import config from '../config.js';
 class ProductManager {
     constructor() {
-        mongoose.connect('mongodb+srv://nicki:gatito1306@cluster0.sxitpsr.mongodb.net/ecommerce', {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        });
     }
 
     async addProduct(productData) {
@@ -66,3 +61,4 @@ class ProductManager {
 }
 
 export default ProductManager;
+

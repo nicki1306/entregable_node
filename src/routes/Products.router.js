@@ -7,6 +7,7 @@ const manager = new ProductManager()
 const router = Router()
 
 
+
 router.get("/products", async (req, res) => {
     const Products = await productsModel.find()
     const products = await manager.getProducts(req.query)
