@@ -22,10 +22,7 @@ const __dirname = dirname(__filename);
 
 const app = express();
 const expressInstance = app.listen(config.PORT, async () => {
-    await mongoose.connect(config.MONGODB_URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    });
+    await mongoose.connect(config.MONGODB_URI,);
     console.log(`Servidor escuchando en http://localhost:${config.PORT}`);
 });
 
@@ -36,10 +33,6 @@ app.use(session({
     store: new fileStorage({
         path: './sessions',
         mongoUrl: config.MONGODB_URI,
-        mongoOptions: {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        },
         ttl: 60 * 60 * 24 // 1 día
     }),
     secret: 'secret',
@@ -56,12 +49,7 @@ app.use(cookieParser(config.SECRET));
 app.use('/static', express.static(path.join(__dirname, 'public')));
 
 // Configuración de Handlebars
-const hbs = handlebars.create({
-    helpers: {
-        eq: (a, b) => a === b
-    }
-});
-app.engine('handlebars', hbs.engine);
+
 app.engine('handlebars', handlebars.engine());
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'handlebars');
@@ -77,3 +65,6 @@ app.use('/api/sessions', sessionsRouter);
 // Socket.io
 const socketServer = initSocket(expressInstance);
 app.set('socketServer', socketServer);
+
+
+export default app;

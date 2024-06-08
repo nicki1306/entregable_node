@@ -6,12 +6,13 @@ import User from "../dao/models/users.model.js";
 const pmanager = new ProductManager();
 const router = Router();
 
-router.get("/products", async (req, res) => {
+router.get('/products', async (req, res) => {
     try {
-        const listaproductos = await pmanager.getProducts();
-        res.render("home", { listaproductos });
+        const products = await ProductManager.getProducts({});
+        res.render('products', { products });
     } catch (error) {
-        res.status(500).send('Error al obtener productos: ' + error.message);
+        console.error('Error al obtener productos:', error);
+        res.status(500).send('Error al obtener productos');
     }
 });
 

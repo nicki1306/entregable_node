@@ -1,13 +1,37 @@
 import mongoose from 'mongoose';
-import Product from '../dao/models/products.model.js';
 import config from '../config.js';
+
+// Definición del esquema del producto
+const ProductSchema = new mongoose.Schema({
+    title: String,
+    description: String,
+    stock: Number,
+    thumbnail: String,
+    category: String,
+    price: Number,
+    status: Boolean,
+    code: String
+});
+
+// Creación del modelo del producto
+const product = mongoose.model('products', ProductSchema);
+
 class ProductManager {
-    constructor() {
+    // Método para obtener productos con una consulta opcional
+    static async getProducts(query = {}) {
+        try {
+            const products = await product.find(query);
+            return products;
+        } catch (error) {
+            console.error('Error al obtener productos:', error);
+            throw error;
+        }
     }
 
+    // Método para agregar un producto
     async addProduct(productData) {
         try {
-            const newProduct = new Product(productData);
+            const newProduct = new product(productData);
             await newProduct.save();
             return newProduct;
         } catch (error) {
@@ -15,17 +39,19 @@ class ProductManager {
         }
     }
 
-    async getProducts() {
+    // Método para obtener todos los productos
+    async getAllProducts() {
         try {
-            return await Product.find();
+            return await product.find();
         } catch (error) {
             throw new Error(`Error al obtener los productos: ${error.message}`);
         }
     }
 
+    // Método para obtener un producto por su ID
     async getProductById(productId) {
         try {
-            const product = await Product.findById(productId);
+            const product = await productId.findById(productId);
             if (!product) {
                 throw new Error('Producto no encontrado.');
             }
@@ -35,9 +61,10 @@ class ProductManager {
         }
     }
 
+    // Método para actualizar un producto
     async updateProduct(productId, updatedFields) {
         try {
-            const updatedProduct = await Product.findByIdAndUpdate(productId, updatedFields, { new: true });
+            const updatedProduct = await productId.findByIdAndUpdate(productId, updatedFields, { new: true });
             if (!updatedProduct) {
                 throw new Error('Producto no encontrado.');
             }
@@ -47,9 +74,10 @@ class ProductManager {
         }
     }
 
+    // Método para eliminar un producto
     async deleteProduct(productId) {
         try {
-            const deletedProduct = await Product.findByIdAndDelete(productId);
+            const deletedProduct = await productId.findByIdAndDelete(productId);
             if (!deletedProduct) {
                 throw new Error('Producto no encontrado.');
             }

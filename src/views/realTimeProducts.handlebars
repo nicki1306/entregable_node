@@ -1,7 +1,16 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link href="/static/styles/tailwind.css" rel="stylesheet">
+    <title>Document</title>
+</head>
+
 <body bg-pink-500 class="body">
 
     <h1>Welcome {{user.email}}</h1>
-    {{#if (eq role 'admin')}}
+    {{#if user.isAdmin}}
     <p>You have admin privileges.</p>
     {{else}}
     <p>You are a regular user.</p>
@@ -69,8 +78,6 @@
         </div>
     </form>
 
-</body>
-
 
 
 
@@ -80,4 +87,9 @@
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
-<script src="public/js/realtime.js"></script>
+<script src="static/js/index.js"></script>
+
+</body>
+</html>
+
+
