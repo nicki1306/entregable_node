@@ -1,32 +1,48 @@
-{{#each listaproductos}}
-<article class="container">
-    <div class="card">
-        <div class="imgBx">
-            <img src="{{thumbnail}}" width="150" />
-        </div>
-        <div class="contentBx">
-            <h2>{{title}}</h2>
-            <div class="size">
-                <h3>{{description}}</h3>
-                <span>7</span>
-                <span>8</span>
-                <span>9</span>
-                <span>10</span>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>Product List</title>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center py-6">
+    <h1 class="text-4xl font-bold mb-8">Product List</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-screen-lg w-full">
+        {{#each listaproductos}}
+        <article class="bg-white shadow-md rounded-lg overflow-hidden">
+            <div class="p-4">
+                <div class="imgBx flex justify-center">
+                    <img src="{{thumbnail}}" alt="{{title}}" class="w-32 h-32 object-cover">
+                </div>
+                <div class="contentBx mt-4 text-center">
+                    <h2 class="text-2xl font-semibold">{{title}}</h2>
+                    <p class="text-gray-600 mt-2">{{description}}</p>
+                    <div class="mt-4">
+                        <h3 class="text-lg font-medium">Size:</h3>
+                        <div class="flex justify-center space-x-2 mt-1">
+                            <span class="bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700">7</span>
+                            <span class="bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700">8</span>
+                            <span class="bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700">9</span>
+                            <span class="bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700">10</span>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <h3 class="text-lg font-medium">Color:</h3>
+                        <div class="flex justify-center space-x-2 mt-1">
+                            <span class="bg-red-500 w-6 h-6 rounded-full inline-block"></span>
+                            <span class="bg-blue-500 w-6 h-6 rounded-full inline-block"></span>
+                            <span class="bg-green-500 w-6 h-6 rounded-full inline-block"></span>
+                        </div>
+                    </div>
+                    <a href="#" class="mt-6 inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Buy Now</a>
+                </div>
             </div>
-            <div class="color">
-                <h3>Color :</h3>
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-            <a href="#">Buy Now</a>
-        </div>
+        </article>
+        {{/each}}
     </div>
 
-</article>
-{{/each}}
-
-
-
-<script src="/src/socket.io.js"></script>
-<script src="/src/public/js/index.js"></script>
+    <script src="/src/socket.io.js"></script>
+    <script src="/src/public/js/index.js"></script>
+</body>
+</html>

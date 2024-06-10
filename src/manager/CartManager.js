@@ -1,26 +1,23 @@
 import Cart from '../dao/models/carts.model.js';
 
 class CartManager {
-    async getCarts(query = {}) {
+    async getCarts() {
         try {
-            const carts = await Cart.find(query).populate('products.productId');
-            return carts;
+            return await Cart.find();
         } catch (error) {
-            console.error('Error al obtener carritos:', error);
-            throw error;
+            throw new Error(`Error al obtener los carritos: ${error.message}`);
         }
     }
 
-    async getCartById(id) {
+    async getCartById(cartId) {
         try {
-            const cart = await Cart.findById(id).populate('products.productId');
+            const cart = await Cart.findById(cartId).populate('products.productId');
             if (!cart) {
                 throw new Error('Carrito no encontrado.');
             }
             return cart;
         } catch (error) {
-            console.error('Error al obtener el carrito:', error);
-            throw error;
+            throw new Error(`Error al obtener el carrito: ${error.message}`);
         }
     }
 
@@ -30,66 +27,28 @@ class CartManager {
             await newCart.save();
             return newCart;
         } catch (error) {
-            console.error('Error al agregar el carrito:', error);
-            throw error;
+            throw new Error(`Error al agregar el carrito: ${error.message}`);
         }
     }
 
-    async addProductToCart(cid, pid) {
+    async addProductToCart(cartId, productId) {
         try {
-            const cart = await Cart.findById(cid);
+            const cart = await Cart.findById(cartId);
             if (!cart) {
                 throw new Error('Carrito no encontrado.');
             }
 
-            const productIndex = cart.products.findIndex(p => p.productId.toString() === pid);
+            const productIndex = cart.products.findIndex(p => p.productId.toString() === productId);
             if (productIndex !== -1) {
-                // Si el producto ya existe en el carrito, incrementar la cantidad
                 cart.products[productIndex].quantity++;
             } else {
-                // Si el producto no existe en el carrito, agregarlo como un nuevo objeto
-                cart.products.push({ productId: pid, quantity: 1 });
+                cart.products.push({ productId, quantity: 1 });
             }
 
             await cart.save();
             return cart;
         } catch (error) {
-            console.error('Error al agregar producto al carrito:', error);
-            throw error;
-        }
-    }
-
-    async removeProductFromCart(cid, pid) {
-        try {
-            const cart = await Cart.findById(cid);
-            if (!cart) {
-                throw new Error('Carrito no encontrado.');
-            }
-
-            const productIndex = cart.products.findIndex(p => p.productId.toString() === pid);
-            if (productIndex !== -1) {
-                // Si el producto existe en el carrito, removerlo
-                cart.products.splice(productIndex, 1);
-            }
-
-            await cart.save();
-            return cart;
-        } catch (error) {
-            console.error('Error al remover producto del carrito:', error);
-            throw error;
-        }
-    }
-
-    async deleteCart(cid) {
-        try {
-            const deletedCart = await Cart.findByIdAndDelete(cid);
-            if (!deletedCart) {
-                throw new Error('Carrito no encontrado.');
-            }
-            return deletedCart;
-        } catch (error) {
-            console.error('Error al eliminar carrito:', error);
-            throw error;
+            throw new Error(`Error al agregar el producto al carrito: ${error.message}`);
         }
     }
 }

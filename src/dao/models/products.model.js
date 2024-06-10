@@ -13,6 +13,6 @@ const schema = new mongoose.Schema({
 
 })
 
-const model = mongoose.model(collection, schema)
+const Productmodel = mongoose.model(collection, schema)
 
-export default model
+export default Productmodel

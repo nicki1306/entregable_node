@@ -1,93 +1,96 @@
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.8/dist/sweetalert2.min.css">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.8/dist/sweetalert2.min.css">
+    <title>Chat</title>
+</head>
+<body class="bg-blue-100 min-h-screen flex flex-col items-center justify-center">
+    <div class="bg-white shadow-md rounded-lg p-8 max-w-lg w-full">
+        <h1 class="text-3xl font-bold mb-6 text-center">Chat</h1>
 
-<h1>Chat</h1>
+        <div class="mb-4">
+            <input type="text" id="chatBox" placeholder="Ingresar mensaje" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
 
-<div>
-    <input type="text" id="chatBox" placeholder="Ingresar mensaje" style="width: 300px;">
-    <br /><br />
-    <button onClick="sendMessage()">Enviar</button>
-</div>
+        <div class="flex justify-center mb-6">
+            <button onClick="sendMessage()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Enviar</button>
+        </div>
 
-<div>
-    <p id="chatList"></p>
-</div>
+        <div id="chatList" class="bg-gray-100 p-4 rounded-lg overflow-y-auto" style="height: 300px;">
+            <!-- Mensajes del chat se agregarán aquí -->
+        </div>
+    </div>
 
-<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"
-    integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO"
-    crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.8/dist/sweetalert2.all.min.js"></script>
-<script type="module">
-    
-    const serverAddress = 'ws://localhost:5000';
-    const socketClient = io(serverAddress);
-    const chatBox = document.getElementById('chatBox');
-    const chatList = document.getElementById('chatList');
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.8/dist/sweetalert2.all.min.js"></script>
+    <script type="module">
+        const serverAddress = 'ws://localhost:5000';
+        const socketClient = io(serverAddress);
+        const chatBox = document.getElementById('chatBox');
+        const chatList = document.getElementById('chatList');
+        let user;
 
-    let user;
+        const addMessageToChat = (user, message) => {
+            const messageElement = document.createElement('p');
+            messageElement.innerHTML = `<strong class="text-blue-600">[${user}]:</strong> ${message}`;
+            chatList.appendChild(messageElement);
+        };
 
-    // Función para agregar mensajes al chat de manera segura
-const addMessageToChat = (user, message) => {
-    const messageElement = document.createElement('p');
-    messageElement.innerHTML = `<strong>[${user}]:</strong> ${message}`;
-    chatList.appendChild(messageElement);
-};
-
-// Listener para cuando se conecta un nuevo cliente
-socketClient.on('newClientConnected', data => {
-    console.log(data);
-});
-
-// Listener para el historial de chat
-socketClient.on('chatLog', data => {
-    chatList.innerHTML = ''; // Limpiamos el chat antes de agregar mensajes
-    data.forEach(msg => {
-        addMessageToChat(msg.user, msg.message);
-    });
-});
-
-// Listener para mensajes nuevos
-socketClient.on('messageArrived', data => {
-    addMessageToChat(data.user, data.message);
-});
-
-// Función para enviar mensajes
-const sendMessage = () => {
-    if (chatBox.value.trim() !== '') {
-        socketClient.emit('newMessage', { user: user, message: chatBox.value.trim() });
-        chatBox.value = '';
-    }
-};
-
-// Función para solicitar nombre de usuario
-const askForUser = async () => {
-    try {
-        const result = await Swal.fire({
-            title: 'ecommerce',
-            input: 'text',
-            text: 'Usuario',
-            inputValidator: value => !value && 'Se debe indicar usuario',
-            allowOutsideClick: false
+        socketClient.on('newClientConnected', data => {
+            console.log(data);
         });
 
-        user = result.value;
-        console.log(user);
-    } catch (error) {
-        console.error('Error al obtener usuario:', error);
-    }
-};
+        socketClient.on('chatLog', data => {
+            chatList.innerHTML = '';
+            data.forEach(msg => {
+                addMessageToChat(msg.user, msg.message);
+            });
+        });
 
-// Listener para el evento keyup en el chatBox
-const debounce = (func, delay) => {
-    let timeout;
-    return (...args) => {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func(...args), delay);
-    };
-};
+        socketClient.on('messageArrived', data => {
+            addMessageToChat(data.user, data.message);
+        });
 
-chatBox.addEventListener('keyup', debounce((evt) => {
-    if (evt.key === 'Enter') sendMessage();
-}, 300));
+        const sendMessage = () => {
+            if (chatBox.value.trim() !== '') {
+                socketClient.emit('newMessage', { user: user, message: chatBox.value.trim() });
+                chatBox.value = '';
+            }
+        };
 
-// Llamamos a la función para solicitar el usuario
-askForUser();
+        const askForUser = async () => {
+            try {
+                const result = await Swal.fire({
+                    title: 'ecommerce',
+                    input: 'text',
+                    text: 'Usuario',
+                    inputValidator: value => !value && 'Se debe indicar usuario',
+                    allowOutsideClick: false
+                });
+
+                user = result.value;
+                console.log(user);
+            } catch (error) {
+                console.error('Error al obtener usuario:', error);
+            }
+        };
+
+        const debounce = (func, delay) => {
+            let timeout;
+            return (...args) => {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func(...args), delay);
+            };
+        };
+
+        chatBox.addEventListener('keyup', debounce((evt) => {
+            if (evt.key === 'Enter') sendMessage();
+        }, 300));
+
+        askForUser();
+    </script>
+</body>
+</html>

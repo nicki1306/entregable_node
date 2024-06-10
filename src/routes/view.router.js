@@ -1,9 +1,11 @@
 import { Router } from "express";
 import ProductManager from "../manager/ProductManager.js";
+import CartManager from "../manager/CartManager.js";
 import bcrypt from 'bcryptjs';
 import User from "../dao/models/users.model.js"; 
 
 const pmanager = new ProductManager();
+const cmanager = new CartManager();
 const router = Router();
 
 router.get('/products', async (req, res) => {
@@ -23,7 +25,7 @@ router.get("/realtimeproducts", async (req, res) => {
 router.get("/carts/:cid", async (req, res) => { 
     try {
         const { cid } = req.params;
-        const carrito = await pmanager.getCartById(cid);
+        const carrito = await cmanager.getCartById(cid);
         res.render("carts", { carrito });
     } catch (error) {
         res.status(500).send('Error al obtener el carrito: ' + error.message);
