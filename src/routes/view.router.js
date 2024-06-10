@@ -8,6 +8,15 @@ const pmanager = new ProductManager();
 const cmanager = new CartManager();
 const router = Router();
 
+router.get('/chat', (req, res) => {
+    res.render('chat', {});
+});
+
+router.get('/register', (req, res) => {
+    res.render('register', {});
+});
+
+
 router.get('/products', async (req, res) => {
     try {
         const products = await ProductManager.getProducts({});
