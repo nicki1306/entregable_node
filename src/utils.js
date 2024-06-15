@@ -1,6 +1,7 @@
 import multer from 'multer';
 import config from './config.js';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -16,6 +17,20 @@ const storage = multer.diskStorage({
 
 export const createHash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 export const isValidPassword = (passwordToVerify, storedHash) => bcrypt.compareSync(passwordToVerify, storedHash);
+
+export const createToken = (user, expiresIn) => {
+    return jwt.sign({ user }, config.JWT_SECRET, { expiresIn });
+};
+
+export const verifyToken = (req, res, next) => {
+    const token = req.headers['x-access-token'];
+    if (!token) return res.status(401).send({ origin: config.SERVER, payload: null, error: 'No token provided' });
+    jwt.verify(token, config.JWT_SECRET, (err, decoded) => {    
+        if (err) return res.status(401).send({ origin: config.SERVER, payload: null, error: 'Failed to authenticate token' });
+        req.user = decoded.user;
+        next();
+    });
+};
 
 export const verifyRequiredBody = (requiredFields) => {
     return (req, res, next) => {

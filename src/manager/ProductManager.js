@@ -1,17 +1,7 @@
 import Product from '../dao/models/products.model.js';
 
 class ProductManager {
-    static async getProducts(query = {}) {
-        try {
-            const products = await Product.find(query);
-            return products;
-        } catch (error) {
-            console.error('Error al obtener productos:', error);
-            throw error;
-        }
-    }
-
-    async addProduct(productData) {
+    static async addProduct(productData) {
         try {
             const newProduct = new Product(productData);
             await newProduct.save();
@@ -21,15 +11,15 @@ class ProductManager {
         }
     }
 
-    async getProducts() {
+    static async getProducts(query = {}) {
         try {
-            return await Product.find();
+            return await Product.find(query);
         } catch (error) {
             throw new Error(`Error al obtener los productos: ${error.message}`);
         }
     }
 
-    async getProductById(productId) {
+    static async getProductById(productId) {
         try {
             const product = await Product.findById(productId);
             if (!product) {
@@ -41,7 +31,7 @@ class ProductManager {
         }
     }
 
-    async updateProduct(productId, updatedFields) {
+    static async updateProduct(productId, updatedFields) {
         try {
             const updatedProduct = await Product.findByIdAndUpdate(productId, updatedFields, { new: true });
             if (!updatedProduct) {
@@ -53,7 +43,7 @@ class ProductManager {
         }
     }
 
-    async deleteProduct(productId) {
+    static async deleteProduct(productId) {
         try {
             const deletedProduct = await Product.findByIdAndDelete(productId);
             if (!deletedProduct) {
@@ -67,5 +57,6 @@ class ProductManager {
 }
 
 export default ProductManager;
+
 
 
