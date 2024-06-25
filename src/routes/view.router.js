@@ -17,7 +17,7 @@ router.get('/register', (req, res) => {
 });
 
 
-router.get('/products', async (req, res) => {
+router.get('/products/:page', async (req, res) => {
     try {
         const products = await ProductManager.getProducts({});
         res.render('products', { products });
