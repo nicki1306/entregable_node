@@ -11,6 +11,16 @@ import config from '../config.js';
 
 const localStrategy = LocalStrategy;
 const manager = new UsersManager();
+const jwtStrategy = jwt.Strategy;
+const jwtExtractor = jwt.ExtractJwt;
+
+
+const cookieExtractor = (req) => {
+    let token = null;
+    if (req && req.cookies) token = req.cookies[`${config.APP_NAME}_cookie`];
+    
+    return token;
+}
 
 const initAuthStrategies = () => {
 
@@ -37,8 +47,9 @@ const initAuthStrategies = () => {
 passport.use('githublogin', new GitHubStrategy({
     clientID: config.GITHUB_CLIENT_ID,
     clientSecret: config.GITHUB_CLIENT_SECRET,
-    callbackURL: config.GITHUB_CALLBACK_URL
-}, async (accessToken, refreshToken, profile, done) => {
+    callbackURL: config.GITHUB_CALLBACK_URL,
+    scope: ['user:email']
+}, async (req, accessToken, refreshToken, profile, done) => {
     try {
         const user = await manager.getOne({ email: profile._json.email });
         if (!user) {
@@ -76,7 +87,7 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (id, done) => {
     try {
-        const user = await User.findById(id);
+        const user = await user.findById(id);
         done(null, user);
     } catch (error) {
         done(error);

@@ -54,6 +54,7 @@ router.post('/login', verifyRequiredBody(['email', 'password']), passport.authen
     }
 });
 
+
 router.post('/jwtlogin', verifyRequiredBody(['email', 'password']), passport.authenticate('login', { failureRedirect: `/login?error=${encodeURI('Usuario o clave no válidos')}` }), (req, res) => {
     try {
         const token = createToken(req.user, '1h');

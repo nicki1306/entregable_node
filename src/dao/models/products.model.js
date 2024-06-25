@@ -1,4 +1,7 @@
 import mongoose from "mongoose";
+import mongoosePaginate from 'mongoose-paginate-v2';
+
+mongoose.pluralize(null);
 
 const collection = "products";
 const schema = new mongoose.Schema({
@@ -8,6 +11,8 @@ const schema = new mongoose.Schema({
     gender: { type: String, required: true },
     ip_address: { type: String, required: true },
 });
+
+schema.plugin(mongoosePaginate);
 
 const Product = mongoose.model(collection, schema);
 

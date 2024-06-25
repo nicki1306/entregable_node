@@ -1,9 +1,9 @@
 import Product from '../dao/models/products.model.js';
 
 class ProductManager {
-    static async addProduct(productData) {
+    static async addProduct(data) {
         try {
-            const newProduct = new Product(productData);
+            const newProduct = new Product(data);
             await newProduct.save();
             return newProduct;
         } catch (error) {
