@@ -4,8 +4,6 @@ import CartManager from "../manager/CartManager.js";
 import bcrypt from 'bcryptjs';
 import User from "../dao/models/users.model.js"; 
 
-const pmanager = new ProductManager();
-const cmanager = new CartManager();
 const router = Router();
 
 router.get('/chat', (req, res) => {
@@ -15,7 +13,6 @@ router.get('/chat', (req, res) => {
 router.get('/register', (req, res) => {
     res.render('register', {});
 });
-
 
 router.get('/products/:page', async (req, res) => {
     try {
@@ -27,14 +24,14 @@ router.get('/products/:page', async (req, res) => {
     }
 });
 
-router.get("/realtimeproducts", async (req, res) => {
+router.get("/realtimeproducts", (req, res) => {
     res.render("realTimeProducts");
 });
 
 router.get("/carts/:cid", async (req, res) => { 
     try {
         const { cid } = req.params;
-        const carrito = await cmanager.getCartById(cid);
+        const carrito = await CartManager.getCartById(cid);
         res.render("carts", { carrito });
     } catch (error) {
         res.status(500).send('Error al obtener el carrito: ' + error.message);

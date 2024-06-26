@@ -3,6 +3,6 @@
 @tailwind utilities;
 
 main.body {
-    @apply bg-pink-500;
+    @apply bg-blue-500;
 }
 
