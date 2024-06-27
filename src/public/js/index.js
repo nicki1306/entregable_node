@@ -1,3 +1,4 @@
+
 const socketCliente = io();
 
 // Manejar la actualización de la lista de productos
@@ -13,22 +14,22 @@ function updateProductList(products) {
 
     products.forEach((product) => {
         productos += `
-            <div class="card bg-gray-300 mb-3 mx-4 my-4 max-w-xs">
-                <div class="card-header bg-gray-500 text-white">code: ${product.code}</div>
-                <div class="card-body">
-                    <h4 class="card-title text-xl font-bold">${product.title}</h4>
-                    <p class="card-text">
-                        <li>id: ${product.id}</li>
-                        <li>description: ${product.description}</li>
-                        <li>price: $${product.price}</li>
-                        <li>category: ${product.category}</li>
-                        <li>status: ${product.status}</li>
-                        <li>stock: ${product.stock}</li>
-                        <li>thumbnail: <img src="${product.thumbnail}" alt="img" class="img-thumbnail img-fluid"></li>
+            <div class="bg-gray-600 p-6 rounded-lg shadow-lg">
+                <div class="bg-gray-700 text-white p-4 rounded-t-lg">Code: ${product.code}</div>
+                <div class="p-4">
+                    <h4 class="text-2xl font-bold mb-2">${product.title}</h4>
+                    <p class="text-gray-300 mb-2">
+                        <li>Id: ${product.id}</li>
+                        <li>Description: ${product.description}</li>
+                        <li>Price: $${product.price}</li>
+                        <li>Category: ${product.category}</li>
+                        <li>Status: ${product.status}</li>
+                        <li>Stock: ${product.stock}</li>
+                        <li>Thumbnail: <img src="${product.thumbnail}" alt="img" class="img-thumbnail img-fluid"></li>
                     </p>
                 </div>
-                <div class="d-flex justify-center mb-4">
-                    <button type="button" class="btn btn-danger delete-btn bg-red-500 text-white py-2 px-4 rounded" data-product-id="${product.id}" onclick="deleteProduct(${product.id})">Eliminar</button>
+                <div class="flex justify-center mb-4">
+                    <button type="button" class="bg-red-500 text-white py-2 px-4 rounded delete-btn" data-product-id="${product.id}" onclick="deleteProduct(${product.id})">Eliminar</button>
                 </div>
             </div>
         `;

@@ -6,7 +6,8 @@ const config = {
     MONGODB_URI: 'mongodb+srv://nicki:gatito1306.@cluster0.sxitpsr.mongodb.net/',
     MONGODB_ID_REGEX: /^[a-fA-F0-9]{24}$/,
     DIRNAME: path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:\/)/, '$1')),
-    SECRET: 'secret', 
+    SECRET: 'secret',
+    PRODUCTS_PER_PAGE: 5,
 
     get UPLOAD_DIR() { return `${this.DIRNAME}/public` }
 };

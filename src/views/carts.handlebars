@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart Manager</title>
+    <link href="/static/css/tailwind.css" rel="stylesheet">
+</head>
+<body class="bg-gray-800 text-gray-100">
+    <div class="container mx-auto my-8">
+        <h1 class="text-4xl font-bold mb-8">Cart Manager</h1>
+        
+        {{#if carrito}}
+            <div class="bg-gray-700 p-6 rounded-lg shadow-lg">
+                <h2 class="text-2xl font-semibold mb-4">Cart ID: {{carrito.id}}</h2>
+                <div class="space-y-4">
+                    {{#each carrito.products}}
+                        <div class="bg-gray-600 p-4 rounded-lg flex justify-between items-center">
+                            <div>
+                                <h3 class="text-xl font-bold">{{this.title}}</h3>
+                                <p class="text-gray-300">Quantity: {{this.quantity}}</p>
+                                <p class="text-gray-300">Price: ${{this.price}}</p>
+                            </div>
+                            <button class="bg-red-600 text-white px-4 py-2 rounded" onclick="removeProduct('{{this.id}}')">Remove</button>
+                        </div>
+                    {{/each}}
+                </div>
+                <div class="mt-8">
+                    <button class="bg-green-600 text-white px-4 py-2 rounded" onclick="checkout('{{carrito.id}}')">Checkout</button>
+                </div>
+            </div>
+        {{else}}
+            <p class="text-red-500">Cart not found.</p>
+        {{/if}}
+    </div>
+    
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socketCliente = io();
+
+        function removeProduct(productId) {
+            const cartId = "{{carrito.id}}"; // Get the cart ID from the rendered template
+            socketCliente.emit("removeProduct", { cartId, productId });
+        }
+
+        function checkout(cartId) {
+            socketCliente.emit("checkout", cartId);
+        }
+
+        socketCliente.on("cartUpdated", updatedCart => {
+            // Logic to update the cart view with the updatedCart data
+            if (updatedCart) {
+                // Update the cart products dynamically
+                updateCartView(updatedCart);
+            } else {
+                // Clear the cart view or show a message
+                document.querySelector('.bg-gray-700').innerHTML = '<p class="text-green-500">Checkout realizado. El carrito está vacío.</p>';
+            }
+        });
+
+        function updateCartView(cart) {
+            let cartContainer = document.querySelector('.bg-gray-700 .space-y-4');
+            let productsHtml = '';
+            cart.products.forEach(product => {
+                productsHtml += `
+                    <div class="bg-gray-600 p-4 rounded-lg flex justify-between items-center">
+                        <div>
+                            <h3 class="text-xl font-bold">${product.title}</h3>
+                            <p class="text-gray-300">Quantity: ${product.quantity}</p>
+                            <p class="text-gray-300">Price: $${product.price}</p>
+                        </div>
+                        <button class="bg-red-600 text-white px-4 py-2 rounded" onclick="removeProduct('${product.id}')">Remove</button>
+                    </div>
+                `;
+            });
+            cartContainer.innerHTML = productsHtml;
+        }
+    </script>
+</body>
+</html>

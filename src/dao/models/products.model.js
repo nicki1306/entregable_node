@@ -4,13 +4,18 @@ import mongoosePaginate from 'mongoose-paginate-v2';
 mongoose.pluralize(null);
 
 const productSchema = new mongoose.Schema({
-    id: { type: Number, required: true, unique: true },
-    first_name: { type: String, required: true },
-    last_name: { type: String, required: true },
-    ip_address: { type: String, required: true },
+    title: { type: String, required: true },
+    description: { type: String, required: true },
+    stock: { type: Number, required: true },
+    thumbnail: { type: String, required: true },
+    category: { type: String, required: true },
+    price: { type: Number, required: true },
+    status: { type: Boolean, default: true },
+    code: { type: String, required: true, unique: true },
 });
 
 productSchema.plugin(mongoosePaginate);
+
 
 const Product = mongoose.model('Product', productSchema);
 
