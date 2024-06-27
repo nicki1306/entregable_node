@@ -58,6 +58,8 @@ class ProductManager {
             console.error('Error al eliminar el producto:', error);
             throw new Error(`Error al eliminar el producto: ${error.message}`);
         }
+
+        
     }
 }
 
